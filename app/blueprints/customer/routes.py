@@ -1,0 +1,62 @@
+from .schemas import customer_schema, customers_schema
+from flask import request, jsonify  
+from marshmallow import ValidationError
+from sqlalchemy import select
+from ...models import Customers,db
+from . import customers_bp
+
+    
+@customers_bp.route("/", methods = ["POST"])
+def create_customer():
+    try:
+        customer_data = customer_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+    
+    query = select(Customers).where(Customers.email == customer_data['email']) #Checking our db for a member with this email
+    existing_member = db.session.execute(query).scalars().all()
+    if existing_member:
+        return jsonify({"error": "Email already associated with an account."}), 400
+        
+
+    new_customer = Customers(**customer_data) # ex Customers(name=customer_data['name'], ...)
+    db.session.add(new_customer)
+    db.session.commit()
+    return customer_schema.jsonify(new_customer), 201
+
+@customers_bp.route("/", methods = ['GET'])
+def get_customers():
+    query = select(Customers)
+    customer = db.session.execute(query).scalars().all()
+
+    return customers_schema.jsonify(customer)
+
+@customers_bp.route("/<int:customer_id>", methods=['PUT'])
+def update_customer(customer_id):
+    customer = db.session.get(Customers, customer_id)
+
+    if not customer:
+        return jsonify({"error": "customer not found."}), 404
+    
+    try:
+        customer_data = customer_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+    
+    for key, value in customer_data.items():
+        #setting the attributes of the customer object to the new values from customer_data
+        setattr(customer, key, value) # setattr(object, name, value) is a built-in Python function that sets the value of an attribute (name) of an object to a specified value.
+
+    db.session.commit()
+    return customer_schema.jsonify(customer), 200
+
+@customers_bp.route("/<int:customer_id>", methods=['DELETE'])
+def delete_customer(customer_id):
+    customer = db.session.get(Customers, customer_id)
+
+    if not customer:
+        return jsonify({"error": "Member not found."}), 404
+    
+    db.session.delete(customer)
+    db.session.commit()
+    return jsonify({"message": f'Member id: {customer_id}, successfully deleted.'}), 200
