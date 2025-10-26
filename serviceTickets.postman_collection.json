@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "43e7cf9c-c98f-4746-a762-aab6d3ea1726",
+		"name": "serviceTickets",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43103895",
+		"_collection_link": "https://others-2705.postman.co/workspace/mechanicShopDB~f5e7ba76-f0ef-4a4b-8297-80a4c44061ac/collection/43103895-43e7cf9c-c98f-4746-a762-aab6d3ea1726?action=share&source=collection_link&creator=43103895"
+	},
+	"item": [
+		{
+			"name": "create tickets",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"service_date\": \"2025-10-24\",\n    \"service_desc\": \"Brake Technician\",\n    \"vin\": \"1HGCM82633A639741\",\n    \"customer_id\": 7\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/serviceTickets",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"serviceTickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all serviceTickets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/serviceTickets",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"serviceTickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assignTicket",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/serviceTickets/4/assign-mechanic/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"serviceTickets",
+						"4",
+						"assign-mechanic",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeTickets",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/serviceTickets/4/remove-mechanic/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"serviceTickets",
+						"4",
+						"remove-mechanic",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

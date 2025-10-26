@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "7d39606b-894d-4411-94b0-45715b2c2e67",
+		"name": "mechanics",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43103895",
+		"_collection_link": "https://others-2705.postman.co/workspace/mechanicShopDB~f5e7ba76-f0ef-4a4b-8297-80a4c44061ac/collection/43103895-7d39606b-894d-4411-94b0-45715b2c2e67?action=share&source=collection_link&creator=43103895"
+	},
+	"item": [
+		{
+			"name": "create mechanic",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"ho@gmail.com\",\n    \"name\": \"Ho\",\n    \"phone\": \"4157532583\",\n    \"specialties\": \"Brake Technician\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/mechanics",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"mechanics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all mechanics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ali\",\n    \"email\": \"ali@gmail.com\",\n    \"phone\": \"4156433846\"\n\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/mechanics",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"mechanics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update mechanic",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"ho1@gmail.com\",\n    \"name\": \"Ho1\",\n    \"phone\": \"4157530001\",\n    \"specialties\": \"Brake Technician\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/mechanics/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"mechanics",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

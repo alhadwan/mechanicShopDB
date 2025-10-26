@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "19de738f-d958-486c-9fb4-717b89bc7db0",
+		"name": "customers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43103895",
+		"_collection_link": "https://others-2705.postman.co/workspace/mechanicShopDB~f5e7ba76-f0ef-4a4b-8297-80a4c44061ac/collection/43103895-19de738f-d958-486c-9fb4-717b89bc7db0?action=share&source=collection_link&creator=43103895"
+	},
+	"item": [
+		{
+			"name": "create customers",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ali\",\n    \"email\": \"ali@gmail.com\",\n    \"phone\": \"4156433846\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all customers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"something\": \"ddddd\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update customer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"al1@gmail.com\",\n    \"name\": \"al1\",\n    \"phone\": \"4152226666\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/customers/7",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"customers",
+						"7"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
