@@ -1,9 +1,30 @@
-from .schemas import customer_schema, customers_schema
+from .schemas import customer_schema, customers_schema, login_schema
 from flask import request, jsonify  
 from marshmallow import ValidationError
 from sqlalchemy import select
 from ...models import Customers,db
 from . import customers_bp
+from app.utils.utils import encode_token, token_required
+
+@customers_bp.route("/login", methods = ["POST"])
+def login_customer():
+    try:
+        customer_credentials = login_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+    
+    query = select(Customers).where(Customers.email == customer_credentials['email']) #Checking our db for a member with this email
+    customer = db.session.execute(query).scalars().first()
+    if customer and customer.password == customer_credentials['password']:
+        auth_token = encode_token(customer.id)
+        response = {
+            "status": "success",
+            "message": "Successfully Logged In",
+            "auth_token": auth_token
+        }
+        return jsonify(response), 200
+    else:
+        return jsonify({"error": "Invalid email or password."}), 401
 
     
 @customers_bp.route("/", methods = ["POST"])
@@ -50,10 +71,10 @@ def update_customer(customer_id):
     db.session.commit()
     return customer_schema.jsonify(customer), 200
 
-@customers_bp.route("/<int:customer_id>", methods=['DELETE'])
-def delete_customer(customer_id):
+@customers_bp.route("/", methods=['DELETE'])
+@token_required
+def delete_customer(customer_id): #id received from token
     customer = db.session.get(Customers, customer_id)
-
     if not customer:
         return jsonify({"error": "Member not found."}), 404
     
