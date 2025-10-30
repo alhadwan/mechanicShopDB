@@ -1,11 +1,12 @@
 from .schemas import customer_schema, customers_schema, login_schema
 from flask import request, jsonify  
 from marshmallow import ValidationError
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from ...models import Customers,db
 from . import customers_bp
 from app.utils.utils import encode_token, token_required
 
+# Customer Login
 @customers_bp.route("/login", methods = ["POST"])
 def login_customer():
     try:
@@ -26,7 +27,7 @@ def login_customer():
     else:
         return jsonify({"error": "Invalid email or password."}), 401
 
-    
+# Create a new customer
 @customers_bp.route("/", methods = ["POST"])
 def create_customer():
     try:
@@ -45,6 +46,7 @@ def create_customer():
     db.session.commit()
     return customer_schema.jsonify(new_customer), 201
 
+# Get all customers
 @customers_bp.route("/", methods = ['GET'])
 def get_customers():
     query = select(Customers)
@@ -52,6 +54,16 @@ def get_customers():
 
     return customers_schema.jsonify(customer)
 
+#Get customer by Id
+@customers_bp.route("/<int:customer_id>", methods=['GET'])
+def get_customer(customer_id):
+    customer = db.session.get(Customers, customer_id)
+    if not customer:
+        return jsonify({"message":"customer not found"})
+    return customer_schema.dump(customer)
+
+
+# Update a customer
 @customers_bp.route("/<int:customer_id>", methods=['PUT'])
 def update_customer(customer_id):
     customer = db.session.get(Customers, customer_id)
@@ -71,6 +83,7 @@ def update_customer(customer_id):
     db.session.commit()
     return customer_schema.jsonify(customer), 200
 
+# Delete a customer by ID
 @customers_bp.route("/", methods=['DELETE'])
 @token_required
 def delete_customer(customer_id): #id received from token
@@ -81,3 +94,11 @@ def delete_customer(customer_id): #id received from token
     db.session.delete(customer)
     db.session.commit()
     return jsonify({"message": f'Member id: {customer_id}, successfully deleted.'}), 200
+
+#Delete all customers
+@customers_bp.route("/", methods=['DELETE'])
+@token_required
+def delete_customers():
+    db.session.execute(delete(Customers))
+    db.session.commit()
+    return jsonify({"message":"customers has been deleted successfully"})

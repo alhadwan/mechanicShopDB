@@ -1,10 +1,11 @@
 from .schemas import mechanic_schema, mechanics_schema
 from flask import request, jsonify  
 from marshmallow import ValidationError
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from ...models import Mechanics,db
 from . import mechanics_bp
 
+# Create a new mechanic
 @mechanics_bp.route("/", methods = ["POST"])
 def create_mechanics():
     try:
@@ -12,6 +13,7 @@ def create_mechanics():
     except ValidationError as e:
         return jsonify(e.messages), 400
     
+    # avoid duplication to the mechanic
     query = select(Mechanics).where(Mechanics.email == mechanic_data["email"])
     existing_email = db.session.execute(query).scalars().all()
     if existing_email:
@@ -22,12 +24,22 @@ def create_mechanics():
     db.session.commit()
     return mechanic_schema.jsonify(new_mechanic), 201
 
+# Get all mechanics
 @mechanics_bp.route("/", methods = ['GET'])
-def get_mechanic():
+def get_mechanics():
     query = select(Mechanics)
     mechanics = db.session.execute(query).scalars().all()
     return mechanics_schema.jsonify(mechanics)
 
+#Get mechanic by Id
+@mechanics_bp.route("/<int:mechanic_id>", methods=['GET'])
+def get_mechanic(mechanic_id):
+    mechanic = db.session.get(Mechanics, mechanic_id)
+    if not mechanic:
+        return jsonify({"message":"mechanic not found"})
+    return mechanic_schema.jsonify(mechanic)
+
+# Update a mechanic
 @mechanics_bp.route("/<int:mechanic_id>", methods = ['PUT'])
 def update_mechanic(mechanic_id):
     mechanic = db.session.get(Mechanics, mechanic_id)
@@ -47,6 +59,7 @@ def update_mechanic(mechanic_id):
 
     return mechanic_schema.jsonify(mechanic), 200
 
+# Delete a mechanic by ID
 @mechanics_bp.route("/<int:mechanic_id>", methods = ['DELETE'])
 def delete_mechanic(mechanic_id):
     mechanic = db.session.get(Mechanics, mechanic_id)
@@ -56,3 +69,10 @@ def delete_mechanic(mechanic_id):
     db.session.delete(mechanic)
     db.session.commit()
     return jsonify({"message": f'Member id: {mechanic_id}, successfully deleted.'}), 200
+
+# Delete all mechanic
+@mechanics_bp.route("/", methods=['DELETE'])
+def delete_mechanics():
+    db.session.execute(delete(Mechanics))
+    db.session.commit()
+    return jsonify({"message": "All mechanics has been deleted"}), 200
