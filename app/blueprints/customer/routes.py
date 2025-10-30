@@ -4,6 +4,7 @@ from marshmallow import ValidationError
 from sqlalchemy import select, delete
 from ...models import Customers,db
 from . import customers_bp
+from app.extensions import limiter, cache
 from app.utils.utils import encode_token, token_required
 
 # Customer Login
@@ -29,6 +30,7 @@ def login_customer():
 
 # Create a new customer
 @customers_bp.route("/", methods = ["POST"])
+@limiter.limit("2 per minute")  # Rate limiting: max 2 requests per minute
 def create_customer():
     try:
         customer_data = customer_schema.load(request.json)
@@ -48,6 +50,7 @@ def create_customer():
 
 # Get all customers
 @customers_bp.route("/", methods = ['GET'])
+@cache.cached(timeout=60)  # Cache this route for 60 seconds
 def get_customers():
     query = select(Customers)
     customer = db.session.execute(query).scalars().all()
