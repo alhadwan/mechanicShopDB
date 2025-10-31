@@ -52,10 +52,16 @@ def create_customer():
 @customers_bp.route("/", methods = ['GET'])
 @cache.cached(timeout=60)  # Cache this route for 60 seconds
 def get_customers():
-    query = select(Customers)
-    customer = db.session.execute(query).scalars().all()
-
-    return customers_schema.jsonify(customer)
+    try:
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Customers)
+        customers = db.paginate(query, page=page, per_page=per_page)
+        return customers_schema.jsonify(customers), 200
+    except:
+        query = select(Customers)
+        customers = db.session.execute(query).scalars().all()
+        return customers_schema.jsonify(customers)
 
 #Get customer by Id
 @customers_bp.route("/<int:customer_id>", methods=['GET'])

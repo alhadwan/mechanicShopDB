@@ -3,6 +3,7 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select, delete
 from ...models import Mechanics,db
+from app.extensions import limiter, cache
 from . import mechanics_bp
 
 # Create a new mechanic
@@ -26,10 +27,18 @@ def create_mechanics():
 
 # Get all mechanics
 @mechanics_bp.route("/", methods = ['GET'])
+# @cache.cached(timeout=60) # Cache this route for 60 seconds
 def get_mechanics():
-    query = select(Mechanics)
-    mechanics = db.session.execute(query).scalars().all()
-    return mechanics_schema.jsonify(mechanics)
+    try:
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Mechanics)
+        mechanics = db.paginate(query, page=page, per_page=per_page)
+        return mechanics_schema.jsonify(mechanics), 200
+    except:
+        query = select(Mechanics)
+        mechanics = db.session.execute(query).scalars().all()
+        return mechanics_schema.jsonify(mechanics)
 
 #Get mechanic by Id
 @mechanics_bp.route("/<int:mechanic_id>", methods=['GET'])
@@ -76,3 +85,24 @@ def delete_mechanics():
     db.session.execute(delete(Mechanics))
     db.session.commit()
     return jsonify({"message": "All mechanics has been deleted"}), 200
+
+# mechanic who worked the most on the ticket
+@mechanics_bp.route("/work", methods=['GET'])
+def mechanic_work():
+    mechanics = db.session.execute(select(Mechanics)).scalars().all()
+
+    mechanics.sort(key=lambda mechanic: len(mechanic.service_tickets), reverse=True)
+
+    # for mechanic in mechanics:
+    #     print(mechanic.name, len(mechanic.service_tickets))
+
+    return mechanics_schema.jsonify(mechanics), 200
+
+# search a mechanic
+@mechanics_bp.route("/search", methods=['GET'])
+def search_mechanic():
+    name = request.args.get('name')
+    
+    query = select(Mechanics).where(Mechanics.name.like(f"%{name}%"))
+    mechanics = db.session.execute(query).scalars().all()
+    return mechanics_schema.jsonify(mechanics), 200

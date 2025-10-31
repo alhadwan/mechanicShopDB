@@ -1,4 +1,4 @@
-from .schemas import ServiceTicket_schema, ServiceTickets_schema
+from .schemas import ServiceTicket_schema, ServiceTickets_schema, edit_service_ticket_schema
 from app.blueprints.mechanics.schemas import mechanic_schema, mechanics_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
@@ -16,10 +16,10 @@ def create_serviceTickets():
     customer = db.session.get(Customers, serviceTicket_data["customer_id"])
     if not customer:
         return jsonify({"error":"customer_id not found"}), 400
-    query = select(ServiceTicket).where(ServiceTicket.vin == serviceTicket_data['vin'])
-    # existing_vin = db.session.execute(query).scalars().all()
-    # if existing_vin:
-    #     return jsonify({"error": "service ticket already associated with an account."}), 400
+    # query = select(ServiceTicket).where(ServiceTicket.vin == serviceTicket_data['vin'])
+    # # existing_vin = db.session.execute(query).scalars().all()
+    # # if existing_vin:
+    # #     return jsonify({"error": "service ticket already associated with an account."}), 400
     new_serviceTicket = ServiceTicket(**serviceTicket_data)
     db.session.add(new_serviceTicket)
     db.session.commit()
@@ -73,6 +73,30 @@ def remove_mechanic(ticket_id, mechanic_id):
        "ticket": ServiceTicket_schema.dump(ticket),
        "mechanics": mechanics_schema.dump(ticket.mechanics)
     }),200
+
+# Update a service ticket
+@serviceTicket_bp.route("/<int:ticket_id>", methods=['PUT'])
+def update_serviceTicket(ticket_id):
+    ticket = db.session.get(ServiceTicket, ticket_id)
+    if not ticket:
+        return jsonify({"message":"ticket not found"})
+    try:
+        ticket_data = edit_service_ticket_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+
+    for mechanic_id in ticket_data['add_mechanic_ids']:
+        mechanic = db.session.get(Mechanics, mechanic_id)
+        if mechanic and mechanic not in ticket.mechanics:
+            ticket.mechanics.append(mechanic)
+
+    for mechanic_id in ticket_data['remove_mechanic_ids']:
+        mechanic = db.session.get(Mechanics, mechanic_id)
+        if mechanic and mechanic in ticket.mechanics:
+            ticket.mechanics.remove(mechanic)
+            
+    db.session.commit()
+    return ServiceTicket_schema.jsonify(ticket), 200
 
 # Delete a service ticket by ID
 @serviceTicket_bp.route("/<int:ticket_id>", methods=['DELETE'])
