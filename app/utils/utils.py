@@ -18,7 +18,7 @@ def encode_token(member_id):
     return token
 
 def token_required(f):
-    @wraps(f) # this decorator preserves the original function's metadata (like its name and docstring) when it's wrapped by another function.
+    @wraps(f) 
     def decorated(*args, **kwargs):
         token = None
         # Look for the token in the Authorization header

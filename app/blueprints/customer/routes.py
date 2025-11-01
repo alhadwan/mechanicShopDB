@@ -87,7 +87,7 @@ def update_customer(customer_id):
     
     for key, value in customer_data.items():
         #setting the attributes of the customer object to the new values from customer_data
-        setattr(customer, key, value) # setattr(object, name, value) is a built-in Python function that sets the value of an attribute (name) of an object to a specified value.
+        setattr(customer, key, value) 
 
     db.session.commit()
     return customer_schema.jsonify(customer), 200

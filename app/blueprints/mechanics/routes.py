@@ -94,12 +94,7 @@ def delete_mechanics():
 @mechanics_bp.route("/work", methods=['GET'])
 def mechanic_work():
     mechanics = db.session.execute(select(Mechanics)).scalars().all()
-
     mechanics.sort(key=lambda mechanic: len(mechanic.service_tickets), reverse=True)
-
-    # for mechanic in mechanics:
-    #     print(mechanic.name, len(mechanic.service_tickets))
-
     return mechanics_schema.jsonify(mechanics), 200
 
 # search a mechanic

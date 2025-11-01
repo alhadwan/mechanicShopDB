@@ -19,10 +19,6 @@ def create_serviceTickets():
     customer = db.session.get(Customers, serviceTicket_data["customer_id"])
     if not customer:
         return jsonify({"error":"customer_id not found"}), 400
-    # query = select(ServiceTicket).where(ServiceTicket.vin == serviceTicket_data['vin'])
-    # # existing_vin = db.session.execute(query).scalars().all()
-    # # if existing_vin:
-    # #     return jsonify({"error": "service ticket already associated with an account."}), 400
     new_serviceTicket = ServiceTicket(**serviceTicket_data)
     db.session.add(new_serviceTicket)
     db.session.commit()
