@@ -5,7 +5,6 @@ from sqlalchemy import select, delete
 from ...models import Mechanics,db
 from app.extensions import limiter, cache
 from . import mechanics_bp
-from app.utils.utils import encode_token, token_required
 
 # Create a new mechanic
 @mechanics_bp.route("/", methods = ["POST"])
@@ -72,7 +71,6 @@ def update_mechanic(mechanic_id):
 
 # Delete a mechanic by ID
 @mechanics_bp.route("/<int:mechanic_id>", methods = ['DELETE'])
-@token_required
 def delete_mechanic(mechanic_id):
     mechanic = db.session.get(Mechanics, mechanic_id)
     if not mechanic:
@@ -84,7 +82,6 @@ def delete_mechanic(mechanic_id):
 
 # Delete all mechanic
 @mechanics_bp.route("/", methods=['DELETE'])
-@token_required
 def delete_mechanics():
     db.session.execute(delete(Mechanics))
     db.session.commit()

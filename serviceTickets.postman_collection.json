@@ -61,12 +61,12 @@
 			"response": []
 		},
 		{
-			"name": "assignTicket",
+			"name": "assign Ticket to mechanic",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/serviceTickets/4/assign-mechanic/2",
+					"raw": "http://127.0.0.1:5000/serviceTickets/2/assign-mechanic/4",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -77,9 +77,9 @@
 					"port": "5000",
 					"path": [
 						"serviceTickets",
-						"4",
+						"2",
 						"assign-mechanic",
-						"2"
+						"4"
 					]
 				}
 			},
@@ -105,6 +105,61 @@
 						"4",
 						"remove-mechanic",
 						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get ticket by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/serviceTickets",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"serviceTickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update service ticket",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "assign inventory",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/serviceTickets/3/assign-inventory/4",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"serviceTickets",
+						"3",
+						"assign-inventory",
+						"4"
 					]
 				}
 			},

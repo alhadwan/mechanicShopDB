@@ -73,7 +73,8 @@ def get_customer(customer_id):
 
 
 # Update a customer
-@customers_bp.route("/<int:customer_id>", methods=['PUT'])
+@customers_bp.route("/", methods=['PUT'])
+@token_required
 def update_customer(customer_id):
     customer = db.session.get(Customers, customer_id)
 
@@ -105,9 +106,8 @@ def delete_customer(customer_id): #id received from token
     return jsonify({"message": f'Member id: {customer_id}, successfully deleted.'}), 200
 
 #Delete all customers
-@customers_bp.route("/", methods=['DELETE'])
-@token_required
-def delete_customers():
-    db.session.execute(delete(Customers))
-    db.session.commit()
-    return jsonify({"message":"customers has been deleted successfully"})
+# @customers_bp.route("/", methods=['DELETE'])
+# def delete_customers():
+#     db.session.execute(delete(Customers))
+#     db.session.commit()
+#     return jsonify({"message":"customers has been deleted successfully"})

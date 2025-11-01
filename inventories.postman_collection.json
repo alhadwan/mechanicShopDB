@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "b0f533d9-da49-42c5-91df-19f2373bd6fd",
+		"name": "inventories",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43103895",
+		"_collection_link": "https://others-2705.postman.co/workspace/mechanicShopDB~f5e7ba76-f0ef-4a4b-8297-80a4c44061ac/collection/43103895-b0f533d9-da49-42c5-91df-19f2373bd6fd?action=share&source=collection_link&creator=43103895"
+	},
+	"item": [
+		{
+			"name": "create inventory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ali\",\n    \"email\": \"ali@gmail.com\",\n    \"phone\": \"4156433846\"\n\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/inventory",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all inventories",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ali\",\n    \"email\": \"ali@gmail.com\",\n    \"phone\": \"4156433846\"\n\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/inventory",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update inventories",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ali\",\n    \"email\": \"ali@gmail.com\",\n    \"phone\": \"4156433846\"\n\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/inventory",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete all inventories",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ali\",\n    \"email\": \"ali@gmail.com\",\n    \"phone\": \"4156433846\"\n\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/inventory",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

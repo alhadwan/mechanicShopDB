@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "3d0f1741-a56a-4c71-9ae7-ea7394efcf14",
+		"name": "login",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43103895",
+		"_collection_link": "https://others-2705.postman.co/workspace/mechanicShopDB~f5e7ba76-f0ef-4a4b-8297-80a4c44061ac/collection/43103895-3d0f1741-a56a-4c71-9ae7-ea7394efcf14?action=share&source=collection_link&creator=43103895"
+	},
+	"item": [
+		{
+			"name": "customers login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"ali@gmail.com\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/customers/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"customers",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
