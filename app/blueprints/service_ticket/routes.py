@@ -1,10 +1,13 @@
 from .schemas import ServiceTicket_schema, ServiceTickets_schema, edit_service_ticket_schema
 from app.blueprints.mechanics.schemas import mechanic_schema, mechanics_schema
+from app.blueprints.Inventory.schemas import inventories_schema, inventory_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select, delete
-from ...models import ServiceTicket, Customers, Mechanics, db
+from ...models import ServiceTicket, Customers, Mechanics, Inventory, db
 from . import serviceTicket_bp
+from app.extensions import limiter, cache
+from app.utils.utils import encode_token, token_required
 
 # Create a new service ticket
 @serviceTicket_bp.route("/", methods=["POST"])
@@ -27,6 +30,8 @@ def create_serviceTickets():
 
 # Get all service tickets
 @serviceTicket_bp.route("/", methods=['GET'])
+@cache.cached(timeout=60)  # Cache this route for 60 seconds
+@limiter.limit("10 per minute")  # Limit to 10 requests per minute
 def get_serviceTickets():
     query = select(ServiceTicket)
     serviceTickets = db.session.execute(query).scalars().all()
@@ -56,6 +61,26 @@ def assign_mechanic(ticket_id, mechanic_id):
        "ticket": ServiceTicket_schema.dump(ticket),
        "mechanics": mechanics_schema.dump(ticket.mechanics)
     }),200
+
+#assign a inventory to a service ticket
+@serviceTicket_bp.route("/<int:ticket_id>/assign-inventory/<int:inventory_id>", methods=['PUT'])
+def assign_inventory(ticket_id, inventory_id):
+    ticket = db.session.get(ServiceTicket, ticket_id)
+    inventory = db.session.get(Inventory, inventory_id)
+
+    if not ticket or not inventory:
+        return jsonify({"message":"ticket or inventory not found"})
+    
+    if inventory not in ticket.inventory:
+        ticket.inventory.append(inventory)
+        db.session.commit()
+
+    return jsonify({
+       "message": "successfully assigned inventory to service ticket",
+       "ticket": ServiceTicket_schema.dump(ticket),
+       "inventory": inventories_schema.dump(ticket.inventory)
+    }),200
+
 
 # remove a mechanic from a service ticket
 @serviceTicket_bp.route("/<int:ticket_id>/remove-mechanic/<int:mechanic_id>", methods=['PUT'])
@@ -94,12 +119,13 @@ def update_serviceTicket(ticket_id):
         mechanic = db.session.get(Mechanics, mechanic_id)
         if mechanic and mechanic in ticket.mechanics:
             ticket.mechanics.remove(mechanic)
-            
+
     db.session.commit()
     return ServiceTicket_schema.jsonify(ticket), 200
 
 # Delete a service ticket by ID
 @serviceTicket_bp.route("/<int:ticket_id>", methods=['DELETE'])
+@token_required
 def delete_ticket(ticket_id):
     ticket = db.session.get(ServiceTicket, ticket_id)
     if not ticket:
@@ -110,6 +136,7 @@ def delete_ticket(ticket_id):
 
 # Delete all service tickets
 @serviceTicket_bp.route("/", methods=['DELETE'])
+@token_required
 def delete_tickets():
     db.session.execute(delete(ServiceTicket))
     db.session.commit()

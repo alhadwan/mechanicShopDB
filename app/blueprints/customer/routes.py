@@ -30,7 +30,7 @@ def login_customer():
 
 # Create a new customer
 @customers_bp.route("/", methods = ["POST"])
-@limiter.limit("2 per minute")  # Rate limiting: max 2 requests per minute
+@limiter.limit("10 per minute")  # Rate limiting: max 10 requests per minute
 def create_customer():
     try:
         customer_data = customer_schema.load(request.json)
