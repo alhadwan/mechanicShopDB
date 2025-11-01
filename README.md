@@ -1,6 +1,6 @@
-# mechanicShopDB 
+# mechanicShopDB
 
-Small mechanic shop DB project. It uses Flask, Flask-SQLAlchemy and stores customers, mechanics, and service tickets in a MySQLworkbench database.
+mechanic shop DB project. It uses Flask, Flask-SQLAlchemy and stores customers, mechanics, inventories and service tickets in a MySQLworkbench database.
 
 ## Tech used
 
@@ -19,55 +19,54 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-2. Install dependencies (if `requirements.txt` exists):
+2. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-If you don't have a `requirements.txt`, install the usual packages:
+3. Environment variables
+
+Use the .env example as a reference to create a `.env` file in the project root.
 
 ```bash
-pip install Flask flask-sqlalchemy marshmallow marshmallow-sqlalchemy mysql-connector-python
+# Example .env
+FLASK_ENV=development
+FLASK_APP=run.py
+DATABASE_USER=myuser
+DATABASE_PASSWORD=mypassword
+DATABASE_HOST=127.0.0.1
+DATABASE_NAME=mechanic_db
+# Or provide a full connection string
+SQLALCHEMY_DATABASE_URI=mysql+mysqlconnector://myuser:mypassword@127.0.0.1/mechanic_db
 ```
 
-3. Configure database credentials
-
-The app reads DB configuration from your Flask config. Edit the config file or set an environment variable (example):
+4. Create the database (example using MySQL):
 
 ```bash
-export DATABASE_URL='mysql+mysqlconnector://user:password@localhost/mechanic_db'
+# create database from MySQL shell or a client
+mysql -u root -p
+CREATE DATABASE mechanic_db;
 ```
 
-Or update the connection string in your local config file used by `create_app`.
+5. Create tables (app context)
 
-
-```python
-from app import create_app
-app = create_app('DevelopmentConfig')
+```bash
+python -c "from app import create_app; app = create_app();
 with app.app_context():
     from app.models import db
-    db.create_all()
+    db.create_all()"
 ```
 
 ## Running the server
-
-- If there is a `run.py` runner, prefer:
-
-```bash
-python run.py
-```
-
-- If the project uses a top-level `app.py` that imports the app factory, you can run:
 
 ```bash
 python app.py
 ```
 
-Note: Make sure your current working directory is the project root (the folder that contains `app/`).
+## Blueprint / endpoint summary
 
-## Endpoints
-
-- /serviceTickets/
-- /customers
-- /mechanics
+- Inventory: CRUD endpoints under `/inventory`
+- Customers: CRUD endpoints under `/customers`
+- Mechanics: CRUD endpoints under `/mechanics`
+- Service tickets: CRUD endpoints under `/service_tickets`
