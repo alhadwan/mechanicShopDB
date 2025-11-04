@@ -6,8 +6,23 @@ from .blueprints.customer import customers_bp
 from .blueprints.mechanics import mechanics_bp
 from .blueprints.Inventory import inventory_bp
 from .blueprints.service_ticket import serviceTicket_bp
+from flask_swagger_ui import get_swaggerui_blueprint
 import os
+
 load_dotenv()
+
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/swagger.yaml'
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Mechanic Shop API"
+    }
+)
+
+
 def create_app(config_name="DevelopmentConfig"):
     app = Flask(__name__)
 
@@ -27,5 +42,6 @@ def create_app(config_name="DevelopmentConfig"):
     app.register_blueprint(mechanics_bp, url_prefix="/mechanics")
     app.register_blueprint(serviceTicket_bp, url_prefix="/serviceTickets")
     app.register_blueprint(inventory_bp, url_prefix="/inventory")
+    app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
     return app
