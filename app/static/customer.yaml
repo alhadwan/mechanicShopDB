@@ -1,4 +1,4 @@
-# Login Endpoint and models for Customer API
+# Login Endpoint
 paths:
   /customers/login:
     post:
@@ -33,6 +33,149 @@ paths:
             application/json:
               { "message": "Invalid email or password", "status": "fail" }
 
+  /customers/{id}:
+    get:
+      tags:
+        - "Customers"
+      summary: "Get customer by ID"
+      description: "Retrieve a customer's details by their ID. Customers must login to get the Authentication code."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the customer to retrieve"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetCustomerId"
+          example:
+            application/json:
+              {
+                "id": 1,
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "phone": "123-456-7890",
+                "password": "123456",
+              }
+
+  /customers:
+    post:
+      tags:
+        - "Customers"
+      summary: "create customer"
+      description: "Create a new customer."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Customer registration details"
+          required: true
+          schema:
+            $ref: "#/definitions/PostCustomerRequest"
+      responses:
+        201:
+          description: "Customer created successfully"
+          schema:
+            $ref: "#/definitions/PostCustomerResponses"
+          example:
+            application/json:
+              {
+                "id": 1,
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "phone": "123-456-7890",
+                "password": "123456",
+              }
+        400:
+          description: "Missing data for required field."
+          schema:
+            $ref: "#/definitions/PostCustomerResponses"
+          example:
+            application/json:
+              {
+                "email": ["Missing data for required field."],
+                "name": ["Missing data for required field."],
+                "password": ["Missing data for required field."],
+                "phone": ["Missing data for required field."],
+              }
+    get:
+      tags:
+        - "Customers"
+      summary: "Get all customers"
+      description: "Retrieve a list of all customers. Also supports pagination via query parameters"
+      parameters:
+        - name: "page"
+          in: "path"
+          description: "Page number"
+          required: false
+          type: "integer"
+        - name: "per_page"
+          in: "path"
+          description: "Number of customers per page"
+          required: false
+          type: "integer"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetCustomerResponses"
+          example:
+            application/json:
+              [
+                {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "johndoe@example.com",
+                  "phone": "123-456-7890",
+                  "password": "123456",
+                },
+              ]
+
+    put:
+      tags:
+        - "Customers"
+      summary: "Update customer"
+      description: "endpoint to update a Customers after they are Authenticate, customers must login to get the Authentication code"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Customer details to update"
+          required: true
+          schema:
+            $ref: "#/definitions/PutCustomerRequest"
+      responses:
+        200:
+          description: "Customer updated successfully"
+          schema:
+            $ref: "#/definitions/PutCustomerResponse"
+          example:
+            application/json:
+              {
+                "id": 1,
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "phone": "123-456-7890",
+                "password": "123456",
+              }
+
+    delete:
+      tags:
+        - "Customers"
+      summary: "Delete customer"
+      description: "endpoint to delete a customer, customers must login to get the Authentication code"
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Customer deleted successfully"
+          schema:
+            $ref: "#/definitions/DeleteCustomer"
+          example:
+            application/json: { "message": "Customer deleted successfully" }
+
 # Data Models
 definitions:
   LoginRequest:
@@ -54,4 +197,107 @@ definitions:
       message:
         type: "string"
       status:
+        type: "string"
+
+  PostCustomerRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+    required:
+      - "name"
+      - "email"
+      - "phone"
+      - "password"
+
+  PostCustomerResponses:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+
+  GetCustomerResponses:
+    type: "array"
+    items:
+      type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+
+  GetCustomerId:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+
+  PutCustomerRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+    required:
+      - "name"
+      - "email"
+      - "phone"
+      - "password"
+  PutCustomerResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+
+  DeleteCustomer:
+    type: "object"
+    properties:
+      message:
         type: "string"

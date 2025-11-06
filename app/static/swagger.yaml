@@ -16,11 +16,15 @@ securityDefinitions:
     name: Authorization
     in: header
 paths:
+  /customers:
+    $ref: "./customer.yaml#/paths/~1customers"
   /customers/login:
     $ref: "./customer.yaml#/paths/~1customers~1login"
+  /customers/{id}:
+    $ref: "./customer.yaml#/paths/~1customers~1{id}"
   # /mechanics:
-  #   $ref: "./mechanic.yaml#/paths/~1mechanics"
+  #   $ref: "./mechanics.yaml#/paths/~1mechanics"
   # /serviceTickets:
-  #   $ref: "./service_ticket.yaml#/paths/~1serviceTickets"
+  #   $ref: "./serviceTickets.yaml#/paths/~1serviceTickets"
   # /inventory:
   #   $ref: "./inventory.yaml#/paths/~1inventory"

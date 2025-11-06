@@ -50,7 +50,7 @@ def create_customer():
 
 # Get all customers
 @customers_bp.route("/", methods = ['GET'])
-@cache.cached(timeout=60)  # Cache this route for 60 seconds
+# @cache.cached(timeout=60)  # Cache this route for 60 seconds
 def get_customers():
     try:
         page = int(request.args.get('page'))
