@@ -106,12 +106,12 @@ paths:
       description: "Retrieve a list of all customers. Also supports pagination via query parameters"
       parameters:
         - name: "page"
-          in: "path"
+          in: "query"
           description: "Page number"
           required: false
           type: "integer"
         - name: "per_page"
-          in: "path"
+          in: "query"
           description: "Number of customers per page"
           required: false
           type: "integer"
