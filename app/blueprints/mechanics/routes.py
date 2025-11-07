@@ -98,6 +98,8 @@ def mechanic_work():
 @mechanics_bp.route("/search", methods=['GET'])
 def search_mechanic():
     name = request.args.get('name')
+    if not name:
+        return jsonify({"error":"Mechanic not found"}), 404
     query = select(Mechanics).where(Mechanics.name.like(f"%{name}%"))
     mechanics = db.session.execute(query).scalars().all()
     return mechanics_schema.jsonify(mechanics), 200

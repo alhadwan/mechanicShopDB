@@ -1,4 +1,4 @@
-# Login Endpoint
+# customers API Documentation
 paths:
   /customers/login:
     post:

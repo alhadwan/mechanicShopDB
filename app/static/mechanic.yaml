@@ -1,0 +1,224 @@
+# mechanics API Documentation
+paths:
+  /mechanics/{id}:
+    put:
+      tags:
+        - "mechanics"
+      summary: "Update mechanic"
+      description: "Update an existing mechanic's details."
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the mechanic to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "Mechanic update details"
+          required: true
+          schema:
+            $ref: "#/definitions/PutMechanicsRequest"
+      responses:
+        200:
+          description: "Mechanic updated successfully"
+          schema:
+            $ref: "#/definitions/PutMechanicsResponses"
+          examples:
+            application/json:
+              id: 1
+              name: "John Doe"
+              email: "johndoe@example.com"
+              phone: "123-456-7890"
+              specialties: "Brake Technician"
+        400:
+          description: "Invalid input data."
+          schema:
+            $ref: "#/definitions/PutMechanicsResponses"
+          examples:
+            application/json:
+              email:
+                - "Missing data for required field."
+              name:
+                - "Missing data for required field."
+              specialties:
+                - "Missing data for required field."
+              phone:
+                - "Missing data for required field."
+    delete:
+      tags:
+        - "mechanics"
+      summary: "Delete mechanic by ID"
+      description: "Delete a mechanic from the system using their ID."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the mechanic to delete"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "Mechanic deleted successfully."
+          schema:
+            $ref: "#/definitions/DeleteMechanicsIdResponses"
+
+  /mechanics:
+    post:
+      tags:
+        - "mechanics"
+      summary: "create mechanics"
+      description: "create new mechanics"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Mechanics registration details"
+          required: true
+          schema:
+            $ref: "#/definitions/PostMechanicsRequest"
+      responses:
+        201:
+          description: "Mechanics created successfully"
+          schema:
+            $ref: "#/definitions/PostMechanicsResponses"
+          examples:
+            application/json:
+              id: 1
+              name: "John Doe"
+              email: "johndoe@example.com"
+              phone: "123-456-7890"
+              specialties: "Brake Technician"
+        400:
+          description: "Missing data for required field."
+          schema:
+            $ref: "#/definitions/PostMechanicsResponses"
+          examples:
+            application/json:
+              email:
+                - "Missing data for required field."
+              name:
+                - "Missing data for required field."
+              specialties:
+                - "Missing data for required field."
+              phone:
+                - "Missing data for required field."
+
+    get:
+      tags:
+        - "mechanics"
+      summary: "Get all mechanics"
+      description: "Retrieve a list of all mechanics."
+      responses:
+        200:
+          description: "A list of mechanics."
+          schema:
+            $ref: "#/definitions/GetMechanicsResponses"
+          examples:
+            application/json:
+              - id: 1
+                name: "John Doe"
+                email: "johndoe@example.com"
+                phone: "123-456-7890"
+                specialties: "Brake Technician"
+
+    delete:
+      tags:
+        - "mechanics"
+      summary: "Delete all mechanics"
+      description: "Delete all mechanics from the system."
+      responses:
+        204:
+          description: "All mechanics deleted successfully."
+          schema:
+            $ref: "#/definitions/DeleteMechanicsResponses"
+
+# Data Models
+definitions:
+  PostMechanicsRequest:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      name:
+        type: "string"
+      phone:
+        type: "string"
+      specialties:
+        type: "string"
+    required:
+      - "name"
+      - "email"
+      - "phone"
+      - "specialties"
+
+  PostMechanicsResponses:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      phone:
+        type: "string"
+      specialties:
+        type: "string"
+
+  GetMechanicsResponses:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        phone:
+          type: "string"
+        specialties:
+          type: "string"
+
+  PutMechanicsRequest:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      name:
+        type: "string"
+      phone:
+        type: "string"
+      specialties:
+        type: "string"
+    required:
+      - "name"
+      - "email"
+      - "phone"
+      - "specialties"
+  PutMechanicsResponses:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      phone:
+        type: "string"
+      specialties:
+        type: "string"
+
+  DeleteMechanicsResponses:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+  DeleteMechanicsIdResponses:
+    type: "object"
+    properties:
+      message:
+        type: "string"

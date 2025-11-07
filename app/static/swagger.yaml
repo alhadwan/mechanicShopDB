@@ -22,8 +22,10 @@ paths:
     $ref: "./customer.yaml#/paths/~1customers~1login"
   /customers/{id}:
     $ref: "./customer.yaml#/paths/~1customers~1{id}"
-  # /mechanics:
-  #   $ref: "./mechanics.yaml#/paths/~1mechanics"
+  /mechanics:
+    $ref: "./mechanic.yaml#/paths/~1mechanics"
+  /mechanics/{id}:
+    $ref: "./mechanic.yaml#/paths/~1mechanics~1{id}"
   # /serviceTickets:
   #   $ref: "./serviceTickets.yaml#/paths/~1serviceTickets"
   # /inventory:
