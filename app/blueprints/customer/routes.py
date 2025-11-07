@@ -99,12 +99,11 @@ def update_customer(customer_id):
 def delete_customer(customer_id): #id received from token
     customer = db.session.get(Customers, customer_id)
     if not customer:
-        return jsonify({"error": "Member not found."}), 404
+        return jsonify({"error": "Customer not found."}), 404
     
     db.session.delete(customer)
     db.session.commit()
-    return jsonify({"message": f'Member id: {customer_id}, successfully deleted.'}), 200
-
+    return jsonify({"message": f'Customer id: {customer_id}, successfully deleted.'}), 200
 #Delete all customers
 # @customers_bp.route("/", methods=['DELETE'])
 # def delete_customers():

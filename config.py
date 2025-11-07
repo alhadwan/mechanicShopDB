@@ -18,8 +18,14 @@ class DevelopmentConfig:
     DEBUG = True
 
 
+# Testing configuration for unit tests
 class TestingConfig:
-    pass
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test_LibraryDB.db" # Use SQLite for testing
+    DEBUG = True # Enable debug mode for testing
+    CACHE_TYPE = "SimpleCache" # Use simple cache for testing
+
+    # SECRET_KEY = "test-secret-key"
+    # JWT_SECRET_KEY = "test-jwt-secret-key"
 
 
 class ProductionConfig:
