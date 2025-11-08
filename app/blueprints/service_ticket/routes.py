@@ -38,7 +38,7 @@ def get_serviceTickets():
 def get_serviceTicket(ticket_id):
     ticket = db.session.get(ServiceTicket, ticket_id)
     if not ticket:
-        return jsonify({"message":"ticket not found"})
+        return jsonify({"message":"ticket not found"}), 400
     return ServiceTicket_schema.jsonify(ticket)
 
 # assign a mechanic to a service ticket
@@ -47,7 +47,7 @@ def assign_mechanic(ticket_id, mechanic_id):
     ticket = db.session.get(ServiceTicket, ticket_id)
     mechanic = db.session.get(Mechanics, mechanic_id)
     if not ticket or not mechanic:
-        return jsonify({"error":"ticket or mechanic not found"})
+        return jsonify({"error":"ticket or mechanic not found"}), 400
 
     if mechanic not in ticket.mechanics:
         ticket.mechanics.append(mechanic)
@@ -65,7 +65,7 @@ def assign_inventory(ticket_id, inventory_id):
     inventory = db.session.get(Inventory, inventory_id)
 
     if not ticket or not inventory:
-        return jsonify({"message":"ticket or inventory not found"})
+        return jsonify({"message":"ticket or inventory not found"}), 400
     
     if inventory not in ticket.inventory:
         ticket.inventory.append(inventory)
@@ -84,7 +84,7 @@ def remove_mechanic(ticket_id, mechanic_id):
     ticket = db.session.get(ServiceTicket, ticket_id) # get the service ticket instance by its ID
     mechanic = db.session.get(Mechanics, mechanic_id) # get the mechanic instance by its ID
     if not ticket or not mechanic:
-        return jsonify({"error":"ticket or mechanic not found"})
+        return jsonify({"error":"ticket or mechanic not found"}), 400
    # Remove the mechanic from the service ticket's mechanics list if they are assigned
     if mechanic in ticket.mechanics:
         ticket.mechanics.remove(mechanic)
@@ -95,12 +95,12 @@ def remove_mechanic(ticket_id, mechanic_id):
        "mechanics": mechanics_schema.dump(ticket.mechanics)
     }),200
 
-# Update a service ticket
+# Update a service ticket by adding/removing mechanics
 @serviceTicket_bp.route("/<int:ticket_id>", methods=['PUT'])
 def update_serviceTicket(ticket_id):
     ticket = db.session.get(ServiceTicket, ticket_id)
     if not ticket:
-        return jsonify({"message":"ticket not found"})
+        return jsonify({"message":"ticket not found"}), 400
     try:
         ticket_data = edit_service_ticket_schema.load(request.json)
     except ValidationError as e:
@@ -125,7 +125,7 @@ def update_serviceTicket(ticket_id):
 def delete_ticket(ticket_id):
     ticket = db.session.get(ServiceTicket, ticket_id)
     if not ticket:
-        return jsonify({"message":"ticket not found"})
+        return jsonify({"message":"ticket not found"}), 400
     db.session.delete(ticket)
     db.session.commit()
     return jsonify({"message": f'Member id: {ticket_id}, successfully deleted.'}), 200

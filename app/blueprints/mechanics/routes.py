@@ -27,7 +27,7 @@ def create_mechanics():
 
 # Get all mechanics
 @mechanics_bp.route("/", methods = ['GET'])
-@cache.cached(timeout=60) # Cache this route for 60 seconds
+# @cache.cached(timeout=60) # Cache this route for 60 seconds
 @limiter.limit("10 per minute") # Limit to 10 requests per minute
 def get_mechanics():
     try:
@@ -97,9 +97,23 @@ def mechanic_work():
 # search a mechanic
 @mechanics_bp.route("/search", methods=['GET'])
 def search_mechanic():
-    name = request.args.get('name')
-    if not name:
-        return jsonify({"error":"Mechanic not found"}), 404
-    query = select(Mechanics).where(Mechanics.name.like(f"%{name}%"))
+    # read and validate the `name` query parameter
+    name = request.args.get('name', type=str)
+    if not name or not name.strip():
+        return jsonify({"error": "Missing required query parameter 'name'."}), 400
+
+    name = name.strip() # to avoid spacing
+
+    # using ilike for case-insensitive match
+    try:
+        criteria = Mechanics.name.ilike(f"%{name}%")
+    except Exception:
+        criteria = Mechanics.name.like(f"%{name}%")
+
+    query = select(Mechanics).where(criteria)
     mechanics = db.session.execute(query).scalars().all()
+
+    if not mechanics:
+        return jsonify({"message": f"No mechanics found matching '{name}'."}), 404
+
     return mechanics_schema.jsonify(mechanics), 200

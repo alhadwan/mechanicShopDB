@@ -1,0 +1,430 @@
+paths:
+  /serviceTickets:
+    post:
+      tags:
+        - "ServiceTickets"
+      summary: "Create a new service ticket "
+      description: "Create a new service ticket for existing customer."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Service ticket details"
+          required: true
+          schema:
+            $ref: "#/definitions/postServiceTicketRequest"
+      responses:
+        201:
+          description: "Service ticket created successfully"
+          schema:
+            $ref: "#/definitions/postServiceTicketResponse"
+          examples:
+            application/json:
+              customer:
+                email: "ali@gmail.com"
+                id: 1
+                name: "ali"
+                password: "123456"
+                phone: "4152226666"
+              customer_id: 1
+              id: 2
+              mechanics: []
+              service_date: "2025-10-24"
+              service_desc: "Brake Technician"
+              vin: "1HGCM82633A639741"
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/postServiceTicketResponse"
+          examples:
+            application/json:
+              customer_id:
+                - "Missing data for required field."
+              service_date:
+                - "Missing data for required field."
+              service_desc:
+                - "Missing data for required field."
+              vin:
+                - "Missing data for required field."
+        401:
+          description: "error"
+          examples:
+            application/json: { "error": "customer_id not found" }
+    get:
+      tags:
+        - "ServiceTickets"
+      summary: "Get all service tickets"
+      description: "Retrieve a list of all service tickets."
+      responses:
+        200:
+          description: "A list of service tickets."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/getServiceTicketResponse"
+          examples:
+            application/json:
+              - customer:
+                  email: "john@gmail.com"
+                  id: 1
+                  name: "John Doe"
+                  password: "123456"
+                  phone: "123-456-7890"
+                customer_id: 1
+                id: 1
+                mechanics: []
+                service_date: "2024-10-24"
+                service_desc: "Oil Change"
+                vin: "1HGCM82633A639741"
+
+  /serviceTickets/{id}:
+    get:
+      tags:
+        - "ServiceTickets"
+      summary: "Get service ticket by ID"
+      description: "Retrieve a service ticket by its ID."
+      parameters:
+        - name: id
+          in: "path"
+          description: "ID of the service ticket"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Service ticket retrieved successfully"
+          schema:
+            $ref: "#/definitions/getServiceTicketIdResponse"
+          examples:
+            application/json:
+              customer:
+                email: "deo@gmail.com"
+                id: 1
+                name: "deo"
+                password: "123456"
+                phone: "4152226666"
+              customer_id: 1
+              id: 1
+              mechanics: []
+              service_date: "2024-10-24"
+              service_desc: "Oil Change"
+              vin: "1HGCM82633A639741"
+        400:
+          description: "Service ticket not found"
+          examples:
+            application/json: { "message": "ticket not found." }
+    put:
+      tags:
+        - "ServiceTickets"
+      summary: "Update service ticket by ID"
+      description: "Update an existing service ticket's by removing/adding mechanics."
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the service ticket to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "Service ticket update details"
+          required: true
+          schema:
+            $ref: "#/definitions/putServiceTicketIdsRequest"
+      responses:
+        200:
+          description: "Service ticket updated successfully"
+          schema:
+            $ref: "#/definitions/putServiceTicketIdsResponse"
+          examples:
+            application/json:
+              {
+                "customer":
+                  {
+                    "email": "al@gmail.com",
+                    "id": 1,
+                    "name": "al",
+                    "password": "123456",
+                    "phone": "4152226666",
+                  },
+                "customer_id": 1,
+                "id": 1,
+                "mechanics":
+                  {
+                    "email": "doe@gmail.com",
+                    "id": 2,
+                    "name": "doe",
+                    "phone": "4152227777",
+                    "specialties": "Brake Technician",
+                    "service_date": "2024-10-24",
+                    "service_desc": "Oil Change",
+                    "vin": "1HGCM82633A639741",
+                  },
+              }
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/putServiceTicketIdsResponse"
+          examples:
+            application/json:
+              add_mechanic_ids:
+                - "Missing data for required field."
+              remove_mechanic_ids:
+                - "Missing data for required field."
+        404:
+          description: "Service ticket not found"
+          examples:
+            application/json:
+              message: "ticket not found."
+        422:
+          description: "Mechanic not found or invalid mechanic id"
+          examples:
+            application/json:
+              remove_mechanic_ids:
+                - "Not a valid list."
+
+  /serviceTickets/{ticket_id}/assign-mechanic/{mechanic_id}:
+    put:
+      tags:
+        - "ServiceTickets"
+      summary: "Assign mechanic to ticket"
+      description: "Assign existing mechanic to existing service ticket."
+      parameters:
+        - name: ticket_id
+          in: "path"
+          description: "ID of the service ticket"
+          required: true
+          type: "integer"
+        - name: mechanic_id
+          in: "path"
+          description: "ID of the mechanic"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Mechanic assigned successfully"
+          examples:
+            application/json:
+              message: "Mechanic assigned to service ticket successfully."
+        404:
+          description: "Service ticket or mechanic not found"
+          examples:
+            application/json:
+              { "error": "Service ticket or mechanic not found." }
+
+  /serviceTickets/{ticket_id}/assign-inventory/{inventory_id}:
+    put:
+      tags:
+        - "ServiceTickets"
+      summary: "Assign inventory item to ticket"
+      description: "Assign existing inventory item to existing service ticket."
+      parameters:
+        - name: ticket_id
+          in: "path"
+          description: "ID of the service ticket"
+          required: true
+          type: "integer"
+        - name: inventory_id
+          in: "path"
+          description: "ID of the inventory item"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Inventory item assigned successfully"
+          examples:
+            application/json:
+              {
+                "inventory":
+                  [
+                    {
+                      "id": 1,
+                      "part_name": "Drain plug gasket",
+                      "price": 3.32,
+                    },
+                  ],
+                "message": "successfully assigned inventory to service ticket",
+                "ticket":
+                  {
+                    "customer":
+                      {
+                        "email": "ali@gmail.com",
+                        "id": 1,
+                        "name": "ali",
+                        "password": "123456",
+                        "phone": "4152226666",
+                      },
+                    "customer_id": 1,
+                    "id": 1,
+                    "mechanics":
+                      [
+                        {
+                          "email": "hoo@gmail.com",
+                          "id": 7,
+                          "name": "Hoo",
+                          "phone": "4157538888",
+                          "specialties": "Auto Technician",
+                        },
+                        {
+                          "email": "ho1@gmail.com",
+                          "id": 8,
+                          "name": "Ho1",
+                          "phone": "4157530001",
+                          "specialties": "Brake Technician",
+                        },
+                      ],
+                    "service_date": "2025-10-24",
+                    "service_desc": "Brake Technician",
+                    "vin": "1HGCM82633A639741",
+                  },
+              }
+        400:
+          description: "Service ticket or inventory item not found"
+          examples:
+            application/json: { "message": "ticket or inventory not found." }
+
+  /serviceTickets/{ticket_id}/remove-mechanic/{mechanic_id}:
+    put:
+      tags:
+        - "ServiceTickets"
+      summary: "Remove mechanic from ticket"
+      description: "Remove existing mechanic from existing service ticket."
+      parameters:
+        - name: ticket_id
+          in: "path"
+          description: "ID of the service ticket"
+          required: true
+          type: "integer"
+        - name: mechanic_id
+          in: "path"
+          description: "ID of the mechanic"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Mechanic removed successfully"
+          examples:
+            application/json:
+              message: "Mechanic removed from service ticket successfully."
+        404:
+          description: "Service ticket or mechanic not found"
+          examples:
+            application/json:
+              { "error": "Service ticket or mechanic not found." }
+
+definitions:
+  postServiceTicketRequest:
+    type: "object"
+    required:
+      - "customer_id"
+      - "service_date"
+      - "service_desc"
+      - "vin"
+    properties:
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: "date"
+      service_desc:
+        type: "string"
+      vin:
+        type: "string"
+
+  postServiceTicketResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: "date"
+      service_desc:
+        type: "string"
+      vin:
+        type: "string"
+      customer:
+        type: "object"
+      mechanics:
+        type: "array"
+        items:
+          type: "object"
+
+  getServiceTicketIdResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: "date"
+      service_desc:
+        type: "string"
+      vin:
+        type: "string"
+      customer:
+        type: "object"
+      mechanics:
+        type: "array"
+        items:
+          type: "object"
+
+  getServiceTicketResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        customer_id:
+          type: "integer"
+        service_date:
+          type: "string"
+          format: "date"
+        service_desc:
+          type: "string"
+        vin:
+          type: "string"
+        customer:
+          type: "object"
+        mechanics:
+          type: "array"
+          items:
+            type: "object"
+
+  putServiceTicketIdsRequest:
+    type: "object"
+    properties:
+      add_mechanic_ids:
+        type: "array"
+        items:
+          type: "integer"
+      remove_mechanic_ids:
+        type: "array"
+        items:
+          type: "integer"
+    required:
+      - "add_mechanic_ids"
+      - "remove_mechanic_ids"
+
+  putServiceTicketIdsResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: "date"
+      service_desc:
+        type: "string"
+      vin:
+        type: "string"
+      customer:
+        type: "object"
+      mechanics:
+        type: "array"
+        items:
+          type: "object"

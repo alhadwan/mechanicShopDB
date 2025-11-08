@@ -1,0 +1,160 @@
+paths:
+  /inventory/{id}:
+    put:
+      tags:
+        - "inventory"
+      summary: "Update inventory item"
+      description: "Update an existing inventory item by ID."
+      parameters:
+        - in: "path"
+          name: "id"
+          type: "integer"
+          required: true
+          description: "ID of the inventory item to update"
+        - in: "body"
+          name: "body"
+          description: "Updated inventory item details"
+          required: true
+          schema:
+            $ref: "#/definitions/PutInventoryRequest"
+      responses:
+        200:
+          description: "Inventory item updated successfully"
+          schema:
+            $ref: "#/definitions/PutInventoryResponses"
+          examples:
+            application/json:
+              id: 1
+              part_name: "Brake Pad"
+              price: 29.99
+        400:
+          description: "Invalid ID supplied or missing data for required field."
+          schema:
+            $ref: "#/definitions/PutInventoryResponses"
+          examples:
+            application/json:
+              part_name:
+                - "Missing data for required field."
+              price:
+                - "Missing data for required field."
+  /inventory:
+    post:
+      tags:
+        - "inventory"
+      summary: "Add new inventory"
+      description: "Create a new inventory."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Inventory item details"
+          required: true
+          schema:
+            $ref: "#/definitions/PostInventoryRequest"
+      responses:
+        201:
+          description: "Inventory item created successfully"
+          schema:
+            $ref: "#/definitions/PostInventoryResponses"
+          examples:
+            application/json:
+              id: 1
+              part_name: "Brake Pad"
+              price: 29.99
+        400:
+          description: "Missing data for required field."
+          schema:
+            $ref: "#/definitions/PostInventoryResponses"
+          examples:
+            application/json:
+              part_name:
+                - "Missing data for required field."
+              price:
+                - "Missing data for required field."
+    get:
+      tags:
+        - "inventory"
+      summary: "Get all inventory items"
+      description: "Retrieve a list of all inventory items."
+      responses:
+        200:
+          description: "A list of inventory items."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/getInventoryResponses"
+          examples:
+            application/json:
+              - id: 1
+                part_name: "Brake Pad"
+                price: 29.99
+              - id: 2
+                part_name: "Oil Filter"
+                price: 15.49
+
+    delete:
+      tags:
+        - "inventory"
+      summary: "Delete all inventory items"
+      description: "Delete all inventory items from the database."
+      responses:
+        204:
+          description: "All inventory items deleted successfully."
+
+definitions:
+  PostInventoryRequest:
+    type: "object"
+    required:
+      - "part_name"
+      - "price"
+    properties:
+      part_name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+  PostInventoryResponses:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      part_name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+  getInventoryResponses:
+    type: "array"
+    items:
+      type: "object"
+    properties:
+      id:
+        type: "integer"
+      part_name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+  PutInventoryRequest:
+    type: "object"
+    required:
+      - "part_name"
+      - "price"
+    properties:
+      part_name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+  PutInventoryResponses:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      part_name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"

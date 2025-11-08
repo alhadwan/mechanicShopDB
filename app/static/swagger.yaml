@@ -26,7 +26,21 @@ paths:
     $ref: "./mechanic.yaml#/paths/~1mechanics"
   /mechanics/{id}:
     $ref: "./mechanic.yaml#/paths/~1mechanics~1{id}"
-  # /serviceTickets:
-  #   $ref: "./serviceTickets.yaml#/paths/~1serviceTickets"
-  # /inventory:
-  #   $ref: "./inventory.yaml#/paths/~1inventory"
+  /mechanics/work:
+    $ref: "./mechanic.yaml#/paths/~1mechanics~1work"
+  /mechanics/search:
+    $ref: "./mechanic.yaml#/paths/~1mechanics~1search"
+  /inventory:
+    $ref: "./inventory.yaml#/paths/~1inventory"
+  /inventory/{id}:
+    $ref: "./inventory.yaml#/paths/~1inventory~1{id}"
+  /serviceTickets:
+    $ref: "./service_ticket.yaml#/paths/~1serviceTickets"
+  /serviceTickets/{ticket_id}/assign-mechanic/{mechanic_id}:
+    $ref: "./service_ticket.yaml#/paths/~1serviceTickets~1{ticket_id}~1assign-mechanic~1{mechanic_id}"
+  /serviceTickets/{ticket_id}/remove-mechanic/{mechanic_id}:
+    $ref: "./service_ticket.yaml#/paths/~1serviceTickets~1{ticket_id}~1remove-mechanic~1{mechanic_id}"
+  /serviceTickets/{id}:
+    $ref: "./service_ticket.yaml#/paths/~1serviceTickets~1{id}"
+  /serviceTickets/{ticket_id}/assign-inventory/{inventory_id}:
+    $ref: "./service_ticket.yaml#/paths/~1serviceTickets~1{ticket_id}~1assign-inventory~1{inventory_id}"

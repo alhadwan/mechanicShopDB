@@ -1,5 +1,56 @@
 # mechanics API Documentation
 paths:
+  /mechanics/search:
+    get:
+      tags:
+        - "mechanics"
+      summary: "Search mechanics by name"
+      description: "Retrieve a list of mechanics based on their names."
+      parameters:
+        - name: "name"
+          in: "query"
+          description: "Name to filter mechanics by"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "A list of mechanics matching the name."
+          schema:
+            $ref: "#/definitions/GetMechanicsNameResponses"
+          examples:
+            application/json:
+              - id: 1
+                name: "John Doe"
+                email: "doe@gmail.com"
+                phone: "123-456-7890"
+                specialties: "Brake Technician"
+        400:
+          description: "Name query parameter is missing."
+          schema:
+            $ref: "#/definitions/GetMechanicsNameResponses"
+          examples:
+            application/json:
+              error: "Missing required query parameter 'name'"
+
+  /mechanics/work:
+    get:
+      tags:
+        - "mechanics"
+      summary: "Get mechanics with most work"
+      description: "Retrieve a list of mechanics who work most on tickets."
+      responses:
+        200:
+          description: " successfully Retrieve a list of mechanics"
+          schema:
+            $ref: "#/definitions/GetMechanicsWorkMostResponses"
+          examples:
+            application/json:
+              - id: 1
+                name: "John Doe"
+                email: "john@gmail.com"
+                phone: "123-456-7890"
+                specialties: "Brake Technician"
+
   /mechanics/{id}:
     put:
       tags:
@@ -106,6 +157,17 @@ paths:
         - "mechanics"
       summary: "Get all mechanics"
       description: "Retrieve a list of all mechanics."
+      parameters:
+        - name: "page"
+          in: "query"
+          description: "Page number"
+          required: false
+          type: "integer"
+        - name: "per_page"
+          in: "query"
+          description: "Number of customers per page"
+          required: false
+          type: "integer"
       responses:
         200:
           description: "A list of mechanics."
@@ -222,3 +284,35 @@ definitions:
     properties:
       message:
         type: "string"
+
+  GetMechanicsWorkMostResponses:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        phone:
+          type: "string"
+        specialties:
+          type: "string"
+
+  GetMechanicsNameResponses:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        phone:
+          type: "string"
+        specialties:
+          type: "string"
