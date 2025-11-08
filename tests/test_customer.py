@@ -1,25 +1,23 @@
 from app import create_app 
 from app.models import db, Customers 
-from app.utils.utils import encode_token
-from datetime import datetime 
 import unittest 
 
 class TestCustomers(unittest.TestCase):
     def setUp(self):
-        self.app = create_app("TestingConfig")
+        self.app = create_app("TestingConfig") # Create the Flask app with testing configuration.
         self.customer = Customers(
             name="test_customer",
             email="test@email.com",
             phone="6543246432",
             password="test"
         )
-        with self.app.app_context():
+
+        with self.app.app_context(): # Set up the application context for database operations.
             db.drop_all()
             db.create_all()
             db.session.add(self.customer)
             db.session.commit()
-        # self.token = encode_token(1)
-        self.client = self.app.test_client()
+        self.client = self.app.test_client() #  Initialize the test client for making requests to the app.
 
 #   test create customer
     def test_create_customer(self):
