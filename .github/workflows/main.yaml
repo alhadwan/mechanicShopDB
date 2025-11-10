@@ -35,7 +35,7 @@ jobs:
   #         echo "Contents of site-packages: $(ls -l venv/lib/python*/site-packages)"
 
   test:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
