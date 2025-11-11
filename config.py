@@ -20,13 +20,11 @@ class DevelopmentConfig:
 
 # Testing configuration for unit tests
 class TestingConfig:
-    SQLALCHEMY_DATABASE_URI = "sqlite:///test_LibraryDB.db" # Use SQLite for testing
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test_mechanicShopDB.db" # Use SQLite for testing
     DEBUG = True # Enable debug mode for testing
     CACHE_TYPE = "SimpleCache" # Use simple cache for testing
 
-    # SECRET_KEY = "test-secret-key"
-    # JWT_SECRET_KEY = "test-jwt-secret-key"
-
 
 class ProductionConfig:
-    pass
+    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI2")
+    CACHE_TYPE = "SimpleCache"  # Use Redis cache in production
