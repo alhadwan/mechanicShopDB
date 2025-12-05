@@ -2,6 +2,9 @@
 
 mechanic shop DB project. It uses Flask, Flask-SQLAlchemy and stores customers, mechanics, inventories and service tickets in a MySQLworkbench database.
 
+## Demo
+Live Demo: https://mechanicshopdb.onrender.com/api/docs/
+
 ## Tech used
 
 - Language: Python
