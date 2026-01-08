@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 from dotenv import load_dotenv
 from .extensions import ma, limiter, cache
 from .models import db
@@ -36,6 +36,11 @@ def create_app(config_name="DevelopmentConfig"):
     db.init_app(app)
     limiter.init_app(app)
     cache.init_app(app)
+
+    # Root route - redirect to API documentation
+    @app.route('/')
+    def index():
+        return redirect(SWAGGER_URL)
 
     # register blueprints
     app.register_blueprint(customers_bp, url_prefix="/customers")
